@@ -10,7 +10,7 @@ func TestHello(t *testing.T) {
 		runAssertStatement(got, want, t)
 	})
 	t.Run("Testing with given name", func(t *testing.T) {
-		got := Hello("Wowa", "French")
+		got := Hello("Wowa", "Italian")
 		want := "Hello, Wowa"
 
 		runAssertStatement(got, want, t)
@@ -23,7 +23,7 @@ func TestHello(t *testing.T) {
 	})
 
 	t.Run("testing with empty string", func(t *testing.T) {
-		got := Hello("", "French")
+		got := Hello("", "Italian")
 		want := "Hello, World"
 
 		runAssertStatement(got, want, t)
