@@ -3,7 +3,11 @@ package main
 import "fmt"
 
 func Hello(name string) string {
-	return "Hello, " + name
+	const englishHelloPrefix = "Hello, "
+	if name == "" {
+		name = "World"
+	}
+	return englishHelloPrefix + name
 }
 
 func main() {
