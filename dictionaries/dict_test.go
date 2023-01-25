@@ -18,9 +18,12 @@ func TestSearch(t *testing.T) {
 			t.Errorf("Should find the word")
 		}
 	}
-	assertError := func(err error, t testing.TB) {
-		if err == nil {
+	assertError := func(gotError error, wantError error, t testing.TB) {
+		if gotError == nil {
 			t.Fatal("Expected error but didn't get one")
+		}
+		if gotError != wantError {
+			t.Errorf("Got %s but need %s", gotError.Error(), wantError.Error())
 		}
 	}
 	dictionary := Dictionary{"key": "some test value"}
@@ -30,10 +33,9 @@ func TestSearch(t *testing.T) {
 		assertStrings(got, want, t)
 	})
 	t.Run("find non existing word", func(t *testing.T) {
-		want := notFoundErrorValue.Error()
+		want := wordNotFoundError
 		_, err := dictionary.Search("non existing key")
-		assertError(err, t)
-		assertStrings(err.Error(), want, t)
+		assertError(err, want, t)
 	})
 	keyToAdd := "test"
 	wordToAdd := "just another word"
@@ -43,7 +45,7 @@ func TestSearch(t *testing.T) {
 	})
 	t.Run("add an existing word", func(t *testing.T) {
 		err := dictionary.Add(keyToAdd, wordToAdd)
-		assertError(err, t)
+		assertError(err, wordAlreadyExistsError, t)
 		assertDefinition(dictionary, keyToAdd, wordToAdd, t)
 	})
 	t.Run("update an existing word", func(t *testing.T) {
@@ -51,6 +53,18 @@ func TestSearch(t *testing.T) {
 		wordToUpdate := "new definition"
 		dictionary.Update(keyToUpdate, wordToUpdate)
 		assertDefinition(dictionary, keyToUpdate, wordToUpdate, t)
+	})
+	t.Run("delete an existing word", func(t *testing.T) {
+		keyToDelete := keyToAdd
+		err := dictionary.Delete(keyToDelete)
+		if err != nil {
+			t.Fatal("Got error but shouldn't get one")
+		}
+	})
+	t.Run("delete non existing word", func(t *testing.T) {
+		keyToDelete := keyToAdd
+		err := dictionary.Delete(keyToDelete)
+		assertError(err, wordDoesNotExistError, t)
 	})
 
 }
