@@ -30,7 +30,7 @@ func TestSearch(t *testing.T) {
 		assertStrings(got, want, t)
 	})
 	t.Run("find non existing word", func(t *testing.T) {
-		want := notFoundErrorValue
+		want := notFoundErrorValue.Error()
 		_, err := dictionary.Search("non existing key")
 		assertError(err, t)
 		assertStrings(err.Error(), want, t)

@@ -1,16 +1,22 @@
 package dictionaries
 
-import "errors"
-
 type Dictionary map[string]string
 
-var notFoundErrorValue = "could not find the word you were looking for"
-var wordAlreadyExistsValue = "word already exists"
+const (
+	notFoundErrorValue     = DictionaryError("could not find the word you were looking for")
+	wordAlreadyExistsValue = DictionaryError("word already exists")
+)
+
+type DictionaryError string
+
+func (e DictionaryError) Error() string {
+	return string(e)
+}
 
 func (dictionary Dictionary) Search(key string) (string, error) {
 	word, ok := dictionary[key]
 	if !ok {
-		return "", errors.New(notFoundErrorValue)
+		return "", notFoundErrorValue
 	}
 	return word, nil
 }
@@ -18,7 +24,7 @@ func (dictionary Dictionary) Search(key string) (string, error) {
 func (dictionary Dictionary) Add(key, word string) error {
 	existingWord, _ := dictionary.Search(key)
 	if existingWord != "" {
-		return errors.New(wordAlreadyExistsValue)
+		return wordAlreadyExistsValue
 	}
 	dictionary[key] = word
 	return nil
