@@ -41,11 +41,16 @@ func TestSearch(t *testing.T) {
 		_ = dictionary.Add(keyToAdd, wordToAdd)
 		assertDefinition(dictionary, keyToAdd, wordToAdd, t)
 	})
-	t.Run("add the existing word", func(t *testing.T) {
+	t.Run("add an existing word", func(t *testing.T) {
 		err := dictionary.Add(keyToAdd, wordToAdd)
 		assertError(err, t)
 		assertDefinition(dictionary, keyToAdd, wordToAdd, t)
-
+	})
+	t.Run("update an existing word", func(t *testing.T) {
+		keyToUpdate := keyToAdd
+		wordToUpdate := "new definition"
+		dictionary.Update(keyToUpdate, wordToUpdate)
+		assertDefinition(dictionary, keyToUpdate, wordToUpdate, t)
 	})
 
 }

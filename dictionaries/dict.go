@@ -23,3 +23,7 @@ func (dictionary Dictionary) Add(key, word string) error {
 	dictionary[key] = word
 	return nil
 }
+
+func (dictionary Dictionary) Update(key, word string) {
+	dictionary[key] = word
+}
