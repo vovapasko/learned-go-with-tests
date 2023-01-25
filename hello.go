@@ -1,6 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"log"
+	"my-super-project/dependency_injection"
+	"net/http"
+)
 
 func Hello(name string, language string) string {
 	if name == "" {
@@ -28,5 +32,9 @@ func getLanguagePrefix(language string) (languageGreetingPrefix string) {
 }
 
 func main() {
-	fmt.Println(Hello("world", "Spanish"))
+	log.Fatal(http.ListenAndServe(":5001", http.HandlerFunc(MyGreetHandler)))
+}
+
+func MyGreetHandler(writer http.ResponseWriter, request *http.Request) {
+	dependency_injection.Greet(writer, "world")
 }
