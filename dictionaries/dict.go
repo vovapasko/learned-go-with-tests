@@ -13,3 +13,7 @@ func (dictionary Dictionary) Search(key string) (string, error) {
 	}
 	return word, nil
 }
+
+func (dictionary Dictionary) Add(key, word string) {
+	dictionary[key] = word
+}
