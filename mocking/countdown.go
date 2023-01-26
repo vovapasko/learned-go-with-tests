@@ -9,10 +9,28 @@ import (
 const countingAmounts = 3
 const finalWord = "Go!"
 
-func Counting(out io.Writer) {
+type Sleeper interface {
+	Sleep()
+}
+
+type SpySleeper struct {
+	CallsAmount int
+}
+
+type DefaultSleeper struct{}
+
+func (sleeper *SpySleeper) Sleep() {
+	sleeper.CallsAmount += 1
+}
+
+func (sleeper *DefaultSleeper) Sleep() {
+	time.Sleep(1 * time.Second)
+}
+
+func Counting(out io.Writer, sleeper Sleeper) {
 	for i := countingAmounts; i > 0; i-- {
 		fmt.Fprintln(out, i)
-		time.Sleep(1 * time.Second)
+		sleeper.Sleep()
 	}
 	fmt.Fprint(out, finalWord)
 }

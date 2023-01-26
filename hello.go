@@ -38,5 +38,6 @@ func MyGreetHandler(writer http.ResponseWriter, request *http.Request) {
 
 func main() {
 	// log.Fatal(http.ListenAndServe(":5001", http.HandlerFunc(MyGreetHandler)))
-	mocking.Counting(os.Stdout)
+	sleeper := &mocking.DefaultSleeper{}
+	mocking.Counting(os.Stdout, sleeper)
 }
