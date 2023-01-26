@@ -1,9 +1,10 @@
 package main
 
 import (
-	"log"
 	"my-super-project/dependency_injection"
+	"my-super-project/mocking"
 	"net/http"
+	"os"
 )
 
 func Hello(name string, language string) string {
@@ -31,10 +32,11 @@ func getLanguagePrefix(language string) (languageGreetingPrefix string) {
 	return
 }
 
-func main() {
-	log.Fatal(http.ListenAndServe(":5001", http.HandlerFunc(MyGreetHandler)))
-}
-
 func MyGreetHandler(writer http.ResponseWriter, request *http.Request) {
 	dependency_injection.Greet(writer, "world")
+}
+
+func main() {
+	// log.Fatal(http.ListenAndServe(":5001", http.HandlerFunc(MyGreetHandler)))
+	mocking.Counting(os.Stdout)
 }
