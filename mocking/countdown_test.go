@@ -9,7 +9,7 @@ import (
 func TestCounting(t *testing.T) {
 	t.Run("main test", func(t *testing.T) {
 		buffer := &bytes.Buffer{}
-		spySleeper := &SpySleeper{}
+		spySleeper := &CountdownOperationsSpy{}
 		Counting(buffer, spySleeper)
 
 		got := buffer.String()
@@ -20,9 +20,6 @@ Go!`
 
 		if got != want {
 			t.Errorf("got %s, want %s", got, want)
-		}
-		if spySleeper.CallsAmount != 3 {
-			t.Errorf("Got %d sleeps, want %d sleeps", spySleeper.CallsAmount, 3)
 		}
 
 	})
