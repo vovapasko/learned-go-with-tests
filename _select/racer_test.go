@@ -35,7 +35,7 @@ func TestRacer(t *testing.T) {
 		url1 := server1.URL
 		url2 := server2.URL
 
-		_, err := Racer(url1, url2)
+		_, err := ConfigurableRacer(url1, url2, 10*time.Millisecond)
 		if err == nil {
 			t.Error("expected an error but didn't get one")
 		}
