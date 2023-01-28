@@ -2,12 +2,12 @@ package _select
 
 import "net/http"
 
-func Racer(firstUrl, secondUrl string) (winner string) {
+func Racer(firstUrl, secondUrl string) (winner string, err error) {
 	select {
 	case <-ping(firstUrl):
-		return firstUrl
+		return firstUrl, nil
 	case <-ping(secondUrl):
-		return secondUrl
+		return secondUrl, nil
 	}
 }
 
