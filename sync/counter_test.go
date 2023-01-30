@@ -32,6 +32,26 @@ func TestCounter(t *testing.T) {
 
 }
 
+func BenchmarkCounter_Inc(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		counter := Counter{}
+		counter.Inc()
+	}
+}
+
+func BenchmarkCounter_Inc_Concurrent(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		wg := sync.WaitGroup{}
+		counter := Counter{}
+		wg.Add(1)
+		go func() {
+			counter.Inc()
+			wg.Done()
+		}()
+
+	}
+}
+
 func assertCounter(t *testing.T, counter Counter, expected int) {
 	got := counter.Value()
 
