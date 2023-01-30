@@ -19,6 +19,14 @@ func TestWalk(t *testing.T) {
 			}{"Chris"},
 			ExpectedCalls: []string{"Chris"},
 		},
+		{
+			"struct with two string fields",
+			struct {
+				Name string
+				City string
+			}{"Chris", "London"},
+			[]string{"Chris", "London"},
+		},
 	}
 
 	for _, testCase := range testCases {
@@ -30,7 +38,7 @@ func TestWalk(t *testing.T) {
 				got = append(got, input)
 			})
 
-			if len(got) != 1 {
+			if len(got) != len(testCase.ExpectedCalls) {
 				t.Errorf("Expected got = %d", len(got))
 			}
 			if !reflect.DeepEqual(got, testCase.ExpectedCalls) {
