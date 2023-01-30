@@ -16,3 +16,7 @@ func (c *Counter) Inc() {
 func (c *Counter) Value() int {
 	return c.state
 }
+
+func NewCounter() *Counter {
+	return &Counter{}
+}

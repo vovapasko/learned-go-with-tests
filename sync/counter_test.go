@@ -8,7 +8,7 @@ import (
 func TestCounter(t *testing.T) {
 	t.Run("increment counter 3 times and get 3", func(t *testing.T) {
 		expected := 3
-		counter := Counter{}
+		counter := NewCounter()
 		counter.Inc()
 		counter.Inc()
 		counter.Inc()
@@ -18,7 +18,7 @@ func TestCounter(t *testing.T) {
 	t.Run("increment counter in different threads", func(t *testing.T) {
 		wg := sync.WaitGroup{}
 		expectedCount := 1000
-		counter := Counter{}
+		counter := NewCounter()
 		wg.Add(expectedCount)
 		for i := 0; i < expectedCount; i++ {
 			go func() {
@@ -52,7 +52,7 @@ func BenchmarkCounter_Inc_Concurrent(b *testing.B) {
 	}
 }
 
-func assertCounter(t *testing.T, counter Counter, expected int) {
+func assertCounter(t *testing.T, counter *Counter, expected int) {
 	got := counter.Value()
 
 	if got != expected {
