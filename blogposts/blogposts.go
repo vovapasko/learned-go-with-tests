@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-const IndexOutOfRangeError = "Index out of range"
+const IndexOutOfRangeError = "index out of range"
 
 type BlogPost struct {
 	Title string
@@ -35,9 +35,21 @@ func getPost(filesystem fs.FS, filename fs.DirEntry) (BlogPost, error) {
 	if err != nil {
 		return BlogPost{}, err
 	}
-	defer postFile.Close()
 
-	postData, err := io.ReadAll(postFile)
+	defer func(postFile fs.File) {
+		err := postFile.Close()
+		if err != nil {
+
+		}
+	}(postFile)
+
+	post, err := createPost(postFile)
+
+	return post, err
+}
+
+func createPost(r io.Reader) (BlogPost, error) {
+	postData, err := io.ReadAll(r)
 	if err != nil {
 		return BlogPost{}, err
 	}
@@ -45,8 +57,7 @@ func getPost(filesystem fs.FS, filename fs.DirEntry) (BlogPost, error) {
 	if err != nil {
 		return BlogPost{}, err
 	}
-	post := BlogPost{Title: title}
-	return post, nil
+	return BlogPost{Title: title}, nil
 }
 
 func extractTitle(data string) (string, error) {
