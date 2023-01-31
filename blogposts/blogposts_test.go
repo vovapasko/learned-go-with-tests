@@ -11,7 +11,12 @@ func TestNewBlogPosts(t *testing.T) {
 		"hello world.md":  {Data: []byte("hi")},
 		"hello-world2.md": {Data: []byte("hola")},
 	}
-	posts := blogposts.NewPostsFromFs(fs)
+	posts, err := blogposts.NewPostsFromFs(fs)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
 	if len(posts) != len(fs) {
 		t.Errorf("got %d posts, expected %d posts", len(posts), len(fs))
 	}
