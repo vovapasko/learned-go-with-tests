@@ -61,18 +61,20 @@ func createPost(r io.Reader) (BlogPost, error) {
 	return BlogPost{Title: title, Description: description}, nil
 }
 
-func extractDescription(post string) (string, error) {
-	splitString := strings.Split(post, "Description: ")
-	if len(splitString) < 2 {
+func extractTitle(data string) (string, error) {
+	_, afterTitle, found := strings.Cut(data, "Title: ")
+	if !found {
 		return "", WrongBlogPostFileFormatError
 	}
-	return splitString[1], nil
+	splitString := strings.Split(afterTitle, "\n")
+	return splitString[0], nil
 }
 
-func extractTitle(data string) (string, error) {
-	splitString := strings.Split(data, "Title: ")
-	if len(splitString) < 2 {
+func extractDescription(data string) (string, error) {
+	_, afterTitle, found := strings.Cut(data, "Description: ")
+	if !found {
 		return "", WrongBlogPostFileFormatError
 	}
-	return splitString[1], nil
+	splitString := strings.Split(afterTitle, "\n")
+	return splitString[0], nil
 }
