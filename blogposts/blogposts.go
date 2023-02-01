@@ -7,11 +7,14 @@ import (
 )
 
 type BlogPost struct {
-	Title, Description string
-	Tags               []string
+	Title, Description, Body string
+	Tags                     []string
 }
 
-const tagSeparator = ", "
+const (
+	tagSeparator  = ", "
+	bodySeparator = "---\n"
+)
 
 func NewPostsFromFs(filesystem fs.FS) ([]BlogPost, error) {
 	dir, err := fs.ReadDir(filesystem, ".")
@@ -62,7 +65,19 @@ func createPost(r io.Reader) (BlogPost, error) {
 		return BlogPost{Title: title}, err
 	}
 	tags, err := extractTags(string(postData))
-	return BlogPost{Title: title, Description: description, Tags: tags}, nil
+	body, err := extractBody(string(postData))
+	if err != nil {
+		return BlogPost{Title: title, Description: description, Tags: tags}, err
+	}
+	return BlogPost{Title: title, Description: description, Tags: tags, Body: body}, nil
+}
+
+func extractBody(data string) (string, error) {
+	_, afterSeparator, found := strings.Cut(data, bodySeparator)
+	if !found {
+		return "", WrongBlogPostFileFormatError
+	}
+	return afterSeparator, nil
 }
 
 func extractTags(data string) ([]string, error) {

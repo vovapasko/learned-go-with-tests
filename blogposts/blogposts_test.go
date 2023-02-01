@@ -22,15 +22,18 @@ func TestNewBlogPosts(t *testing.T) {
 			firstPost = `Title: Post 1
 Description: My test description 1
 Tags: myTag1
-`
+---
+Hello world in one line text 1!`
 			secondPost = `Title: Post 2
 Description: My test description 2
 Tags: myTag2, Personal
-`
+---
+Hello world in one line text 2!`
 			thirdPost = `Title: Post 3
 Description: My test description 3
 Tags:
-`
+---
+Hello world in one line text 3!`
 		)
 
 		want := []blogposts.BlogPost{
@@ -38,16 +41,19 @@ Tags:
 				Title:       "Post 1",
 				Description: "My test description 1",
 				Tags:        []string{"myTag1"},
+				Body:        "Hello world in one line text 1!",
 			},
 			{
 				Title:       "Post 2",
 				Description: "My test description 2",
 				Tags:        []string{"myTag2", "Personal"},
+				Body:        "Hello world in one line text 2!",
 			},
 			{
 				Title:       "Post 3",
 				Description: "My test description 3",
 				Tags:        []string{},
+				Body:        "Hello world in one line text 3!",
 			},
 		}
 		fs := fstest.MapFS{
