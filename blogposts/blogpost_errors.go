@@ -1,8 +1,7 @@
 package blogposts
 
 const (
-	IndexOutOfRangeError         = "index out of range"
-	WrongBlogPostFileFormatError = "wrong format of the file to convert to blog post"
+	WrongBlogPostFileFormatError = BlogPostError("wrong format of the file to convert to blog post")
 )
 
 type BlogPostError string

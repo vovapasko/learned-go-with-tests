@@ -1,7 +1,6 @@
 package blogposts
 
 import (
-	"errors"
 	"io"
 	"io/fs"
 	"strings"
@@ -61,7 +60,7 @@ func createPost(r io.Reader) (BlogPost, error) {
 func extractTitle(data string) (string, error) {
 	splitString := strings.Split(data, "Title: ")
 	if len(splitString) < 2 {
-		return "", errors.New(IndexOutOfRangeError)
+		return "", WrongBlogPostFileFormatError
 	}
 	return splitString[1], nil
 }

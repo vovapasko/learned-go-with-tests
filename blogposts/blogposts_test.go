@@ -15,7 +15,7 @@ func TestNewBlogPosts(t *testing.T) {
 		}
 		_, err := blogposts.NewPostsFromFs(fs)
 
-		assertError(t, err)
+		assertError(t, err, blogposts.WrongBlogPostFileFormatError)
 	})
 	t.Run("test specific post after extracting", func(t *testing.T) {
 		fs := fstest.MapFS{
@@ -40,9 +40,12 @@ func TestNewBlogPosts(t *testing.T) {
 
 }
 
-func assertError(t *testing.T, err error) {
-	if err == nil {
+func assertError(t *testing.T, gotError error, wantError error) {
+	if gotError == nil {
 		t.Error("Should give an error")
+	}
+	if gotError != wantError {
+		t.Errorf("Expected error %v, but got %v", wantError, gotError)
 	}
 }
 
