@@ -62,16 +62,15 @@ func createPost(r io.Reader) (BlogPost, error) {
 }
 
 func extractTitle(data string) (string, error) {
-	_, afterTitle, found := strings.Cut(data, "Title: ")
-	if !found {
-		return "", WrongBlogPostFileFormatError
-	}
-	splitString := strings.Split(afterTitle, "\n")
-	return splitString[0], nil
+	return extractByTheKey(data, "Title: ")
 }
 
 func extractDescription(data string) (string, error) {
-	_, afterTitle, found := strings.Cut(data, "Description: ")
+	return extractByTheKey(data, "Description: ")
+}
+
+func extractByTheKey(data string, key string) (string, error) {
+	_, afterTitle, found := strings.Cut(data, key)
 	if !found {
 		return "", WrongBlogPostFileFormatError
 	}
