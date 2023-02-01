@@ -7,7 +7,7 @@ import (
 )
 
 type BlogPost struct {
-	Title string
+	Title, Description string
 }
 
 func NewPostsFromFs(filesystem fs.FS) ([]BlogPost, error) {
@@ -54,7 +54,19 @@ func createPost(r io.Reader) (BlogPost, error) {
 	if err != nil {
 		return BlogPost{}, err
 	}
-	return BlogPost{Title: title}, nil
+	description, err := extractDescription(string(postData))
+	if err != nil {
+		return BlogPost{Title: title}, err
+	}
+	return BlogPost{Title: title, Description: description}, nil
+}
+
+func extractDescription(post string) (string, error) {
+	splitString := strings.Split(post, "Description: ")
+	if len(splitString) < 2 {
+		return "", WrongBlogPostFileFormatError
+	}
+	return splitString[1], nil
 }
 
 func extractTitle(data string) (string, error) {
