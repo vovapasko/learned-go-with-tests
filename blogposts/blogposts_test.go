@@ -28,12 +28,24 @@ Hello world in one line text 1!`
 Description: My test description 2
 Tags: myTag2, Personal
 ---
-Hello world in one line text 2!`
+
+Hello world in many lines text 2!
+Here goes something 
+
+and here!
+
+Lorem ipsum`
 			thirdPost = `Title: Post 3
 Description: My test description 3
 Tags:
 ---
-Hello world in one line text 3!`
+Hello world in many lines text 3!
+Here goes something 
+
+and here!
+
+Lorem ipsum
+`
 		)
 
 		want := []blogposts.BlogPost{
@@ -47,13 +59,13 @@ Hello world in one line text 3!`
 				Title:       "Post 2",
 				Description: "My test description 2",
 				Tags:        []string{"myTag2", "Personal"},
-				Body:        "Hello world in one line text 2!",
+				Body:        "\nHello world in many lines text 2!\nHere goes something \n\nand here!\n\nLorem ipsum",
 			},
 			{
 				Title:       "Post 3",
 				Description: "My test description 3",
 				Tags:        []string{},
-				Body:        "Hello world in one line text 3!",
+				Body:        "Hello world in many lines text 3!\nHere goes something \n\nand here!\n\nLorem ipsum\n",
 			},
 		}
 		fs := fstest.MapFS{
