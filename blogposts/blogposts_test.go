@@ -18,13 +18,27 @@ func TestNewBlogPosts(t *testing.T) {
 		assertError(t, err, blogposts.WrongBlogPostFileFormatError)
 	})
 	t.Run("test specific post after extracting", func(t *testing.T) {
+		//		const (
+		//			firstPost = `Title: Post 1
+		//Description: My test description 1`
+		//			secondPost = `Title: Post 2
+		//Description: My test description 2`
+		//		)
+
+		want := []blogposts.BlogPost{
+			{
+				Title: "Post 1",
+			},
+			{
+				Title: "Post 2",
+			},
+		}
 		fs := fstest.MapFS{
 			"hello world.md":  {Data: []byte("Title: Post 1")},
 			"hello-world2.md": {Data: []byte("Title: Post 2")},
 		}
 		posts, err := blogposts.NewPostsFromFs(fs)
-		got := posts[0]
-		want := blogposts.BlogPost{Title: "Post 1"}
+		got := posts
 
 		assertNoError(t, err)
 
