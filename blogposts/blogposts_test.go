@@ -21,10 +21,16 @@ func TestNewBlogPosts(t *testing.T) {
 		const (
 			firstPost = `Title: Post 1
 Description: My test description 1
-Tags: myTag1`
+Tags: myTag1
+`
 			secondPost = `Title: Post 2
 Description: My test description 2
-Tags: myTag2, Personal`
+Tags: myTag2, Personal
+`
+			thirdPost = `Title: Post 3
+Description: My test description 3
+Tags:
+`
 		)
 
 		want := []blogposts.BlogPost{
@@ -38,10 +44,16 @@ Tags: myTag2, Personal`
 				Description: "My test description 2",
 				Tags:        []string{"myTag2", "Personal"},
 			},
+			{
+				Title:       "Post 3",
+				Description: "My test description 3",
+				Tags:        []string{},
+			},
 		}
 		fs := fstest.MapFS{
 			"hello world.md":  {Data: []byte(firstPost)},
 			"hello-world2.md": {Data: []byte(secondPost)},
+			"hello-world3.md": {Data: []byte(thirdPost)},
 		}
 		posts, err := blogposts.NewPostsFromFs(fs)
 		got := posts
