@@ -7,8 +7,6 @@ import (
 	"strings"
 )
 
-const IndexOutOfRangeError = "index out of range"
-
 type BlogPost struct {
 	Title string
 }
