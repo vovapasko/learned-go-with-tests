@@ -20,19 +20,23 @@ func TestNewBlogPosts(t *testing.T) {
 	t.Run("test specific post after extracting", func(t *testing.T) {
 		const (
 			firstPost = `Title: Post 1
-Description: My test description 1`
+Description: My test description 1
+Tags: myTag1`
 			secondPost = `Title: Post 2
-Description: My test description 2`
+Description: My test description 2
+Tags: myTag2, Personal`
 		)
 
 		want := []blogposts.BlogPost{
 			{
 				Title:       "Post 1",
 				Description: "My test description 1",
+				Tags:        []string{"myTag1"},
 			},
 			{
 				Title:       "Post 2",
 				Description: "My test description 2",
+				Tags:        []string{"myTag2", "Personal"},
 			},
 		}
 		fs := fstest.MapFS{

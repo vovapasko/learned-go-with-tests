@@ -8,7 +8,10 @@ import (
 
 type BlogPost struct {
 	Title, Description string
+	Tags               []string
 }
+
+const tagSeparator = ", "
 
 func NewPostsFromFs(filesystem fs.FS) ([]BlogPost, error) {
 	dir, err := fs.ReadDir(filesystem, ".")
@@ -58,7 +61,21 @@ func createPost(r io.Reader) (BlogPost, error) {
 	if err != nil {
 		return BlogPost{Title: title}, err
 	}
-	return BlogPost{Title: title, Description: description}, nil
+	tags, err := extractTags(string(postData))
+	return BlogPost{Title: title, Description: description, Tags: tags}, nil
+}
+
+func extractTags(data string) ([]string, error) {
+	rawTags, err := extractByTheKey(data, "Tags: ")
+	if err != nil {
+		return []string{}, err
+	}
+	tags := parseTags(rawTags, tagSeparator)
+	return tags, nil
+}
+
+func parseTags(data, tagSeparator string) []string {
+	return strings.Split(data, tagSeparator)
 }
 
 func extractTitle(data string) (string, error) {
