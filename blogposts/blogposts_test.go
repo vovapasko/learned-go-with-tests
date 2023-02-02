@@ -1,7 +1,7 @@
 package blogposts_test
 
 import (
-	"github.com/vovapasko/blogposts"
+	"my-super-project/blogposts"
 	"reflect"
 	"testing"
 	"testing/fstest"

@@ -1,8 +1,9 @@
 package main
 
 import (
+	"fmt"
+	"my-super-project/blogposts"
 	"my-super-project/dependency_injection"
-	"my-super-project/mocking"
 	"net/http"
 	"os"
 )
@@ -38,6 +39,13 @@ func MyGreetHandler(writer http.ResponseWriter, request *http.Request) {
 
 func main() {
 	// log.Fatal(http.ListenAndServe(":5001", http.HandlerFunc(MyGreetHandler)))
-	sleeper := &mocking.DefaultSleeper{}
-	mocking.Counting(os.Stdout, sleeper)
+	//sleeper := &mocking.DefaultSleeper{}
+	//mocking.Counting(os.Stdout, sleeper)
+	fs := os.DirFS("posts")
+	posts, err := blogposts.NewPostsFromFs(fs)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	fmt.Print(posts)
+
 }
