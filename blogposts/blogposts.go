@@ -12,8 +12,11 @@ type BlogPost struct {
 }
 
 const (
-	tagSeparator  = ", "
-	bodySeparator = "---\n"
+	tagSeparator   = ", "
+	bodySeparator  = "---\n"
+	titleKey       = "Title: "
+	descriptionKey = "Description: "
+	tagsKey        = "Tags: "
 )
 
 func NewPostsFromFs(filesystem fs.FS) ([]BlogPost, error) {
@@ -56,20 +59,31 @@ func createPost(r io.Reader) (BlogPost, error) {
 	if err != nil {
 		return BlogPost{}, err
 	}
-	title, err := extractTitle(string(postData))
-	if err != nil {
-		return BlogPost{}, err
-	}
-	description, err := extractDescription(string(postData))
-	if err != nil {
-		return BlogPost{Title: title}, err
-	}
-	tags, err := extractTags(string(postData))
+
+	postMetadataMap := extractPostMetadata(string(postData))
+
 	body, err := extractBody(string(postData))
 	if err != nil {
-		return BlogPost{Title: title, Description: description, Tags: tags}, err
+		return BlogPost{
+			Title: postMetadataMap[titleKey], Description: postMetadataMap[descriptionKey],
+			Tags: parseTags(postMetadataMap[tagsKey], tagSeparator),
+		}, err
 	}
-	return BlogPost{Title: title, Description: description, Tags: tags, Body: body}, nil
+	return BlogPost{
+		Title: postMetadataMap[titleKey], Description: postMetadataMap[descriptionKey],
+		Tags: parseTags(postMetadataMap[tagsKey], tagSeparator), Body: body,
+	}, nil
+}
+
+func extractPostMetadata(data string) (metadataMap map[string]string) {
+	metadataMap = make(map[string]string)
+	title, _ := extractTitle(data)
+	description, _ := extractDescription(data)
+	tags, _ := extractTags(data)
+	metadataMap[titleKey] = title
+	metadataMap[descriptionKey] = description
+	metadataMap[tagsKey] = tags
+	return
 }
 
 func extractBody(data string) (string, error) {
@@ -80,25 +94,28 @@ func extractBody(data string) (string, error) {
 	return afterSeparator, nil
 }
 
-func extractTags(data string) ([]string, error) {
-	rawTags, err := extractByTheKey(data, "Tags: ")
+func extractTags(data string) (string, error) {
+	rawTags, err := extractByTheKey(data, tagsKey)
 	if err != nil {
-		return []string{}, err
+		return "", err
 	}
-	tags := parseTags(rawTags, tagSeparator)
-	return tags, nil
+	return rawTags, nil
 }
 
-func parseTags(data, tagSeparator string) []string {
-	return strings.Split(data, tagSeparator)
+func parseTags(data, tagSeparator string) (result []string) {
+	splitted := strings.Split(data, tagSeparator)
+	if splitted[0] == "" {
+		return make([]string, 0)
+	}
+	return splitted
 }
 
 func extractTitle(data string) (string, error) {
-	return extractByTheKey(data, "Title: ")
+	return extractByTheKey(data, titleKey)
 }
 
 func extractDescription(data string) (string, error) {
-	return extractByTheKey(data, "Description: ")
+	return extractByTheKey(data, descriptionKey)
 }
 
 func extractByTheKey(data string, key string) (string, error) {
