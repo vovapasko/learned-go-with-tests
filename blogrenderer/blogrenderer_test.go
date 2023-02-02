@@ -3,6 +3,7 @@ package blogrenderer
 import (
 	"bytes"
 	approvals "github.com/approvals/go-approval-tests"
+	"io"
 	"my-super-project/blogposts"
 	"testing"
 )
@@ -27,4 +28,20 @@ func TestRenderer(t *testing.T) {
 		approvals.VerifyString(t, buf.String())
 
 	})
+}
+
+func BenchmarkRender(b *testing.B) {
+	var (
+		aPost = blogposts.BlogPost{
+			Title:       "hello world",
+			Body:        "This is a post",
+			Description: "This is a description",
+			Tags:        []string{"go", "tdd"},
+		}
+	)
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_ = Render(io.Discard, aPost)
+	}
 }
