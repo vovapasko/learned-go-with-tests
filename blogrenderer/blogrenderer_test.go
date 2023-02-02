@@ -20,8 +20,8 @@ func TestRenderer(t *testing.T) {
 
 	t.Run("it converts a single post into HTML", func(t *testing.T) {
 		buf := bytes.Buffer{}
-
-		if err := Render(&buf, aPost); err != nil {
+		renderer, _ := NewRenderer()
+		if err := renderer.Render(&buf, aPost); err != nil {
 			t.Fatal(err)
 		}
 
@@ -39,9 +39,9 @@ func BenchmarkRender(b *testing.B) {
 			Tags:        []string{"go", "tdd"},
 		}
 	)
-
+	renderer, _ := NewRenderer()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_ = Render(io.Discard, aPost)
+		_ = renderer.Render(io.Discard, aPost)
 	}
 }

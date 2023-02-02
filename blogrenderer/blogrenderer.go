@@ -12,12 +12,20 @@ var (
 	postTemplates embed.FS
 )
 
-func Render(w io.Writer, p blogposts.BlogPost) error {
+type PostRenderer struct {
+	templ *template.Template
+}
+
+func NewRenderer() (*PostRenderer, error) {
 	templ, err := template.ParseFS(postTemplates, "templates/*.gohtml")
 	if err != nil {
-		return err
+		return nil, err
 	}
-	if err := templ.Execute(w, p); err != nil {
+	return &PostRenderer{templ: templ}, nil
+}
+
+func (renderer *PostRenderer) Render(w io.Writer, p blogposts.BlogPost) error {
+	if err := renderer.templ.Execute(w, p); err != nil {
 		return err
 	}
 	return nil
