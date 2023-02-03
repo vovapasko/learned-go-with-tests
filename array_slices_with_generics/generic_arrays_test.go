@@ -10,9 +10,8 @@ func TestSum(t *testing.T) {
 		addFunction := func(a, b int) int { return a + b }
 		actual := Reduce(numbers, addFunction, 0)
 		expected := 15
-		if actual != expected {
-			t.Errorf("Actual %d, but expected %d, given %v", actual, expected, numbers)
-		}
+		AssertEqual(t, actual, expected)
+
 	})
 	t.Run("run reduce multiplication on array", func(t *testing.T) {
 		numbers := []float32{1, 2, 3, 4, 5}
@@ -23,4 +22,29 @@ func TestSum(t *testing.T) {
 			t.Errorf("Actual %v, but expected %v, given %v", actual, expected, numbers)
 		}
 	})
+}
+
+func TestBadBank(t *testing.T) {
+	transactions := []Transaction{
+		{
+			From: "Chris",
+			To:   "Riya",
+			Sum:  100,
+		},
+		{
+			From: "Adil",
+			To:   "Chris",
+			Sum:  25,
+		},
+	}
+
+	AssertEqual(t, BalanceFor(transactions, "Riya"), 100)
+	AssertEqual(t, BalanceFor(transactions, "Chris"), -75)
+	AssertEqual(t, BalanceFor(transactions, "Adil"), -25)
+}
+
+func AssertEqual[T comparable](t *testing.T, want, got T) {
+	if want != got {
+		t.Errorf("Actual %v, but expected %v", got, want)
+	}
 }
