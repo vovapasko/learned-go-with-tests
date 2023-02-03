@@ -1,27 +1,42 @@
 package arrays_slices_with_generics
 
-type Transaction struct {
-	From, To string
-	Sum      int
-}
-
-func Reduce[T any](collection []T, function func(a, b T) T, initialValue T) T {
-	result := initialValue
-	for _, number := range collection {
-		result = function(result, number)
+func Reduce[A, B any](collection []A, accumulator func(B, A) B, initialValue B) B {
+	var result = initialValue
+	for _, x := range collection {
+		result = accumulator(result, x)
 	}
 	return result
 }
 
-func BalanceFor(transactions []Transaction, name string) int {
-	personBalance := 0
-	for _, transaction := range transactions {
-		if transaction.From == name {
-			personBalance -= transaction.Sum
-		}
-		if transaction.To == name {
-			personBalance += transaction.Sum
-		}
+type Transaction struct {
+	From string
+	To   string
+	Sum  float64
+}
+
+func NewTransaction(from, to Account, sum float64) Transaction {
+	return Transaction{From: from.Name, To: to.Name, Sum: sum}
+}
+
+type Account struct {
+	Name    string
+	Balance float64
+}
+
+func NewBalanceFor(account Account, transactions []Transaction) Account {
+	return Reduce(
+		transactions,
+		applyTransaction,
+		account,
+	)
+}
+
+func applyTransaction(a Account, transaction Transaction) Account {
+	if transaction.From == a.Name {
+		a.Balance -= transaction.Sum
 	}
-	return personBalance
+	if transaction.To == a.Name {
+		a.Balance += transaction.Sum
+	}
+	return a
 }
